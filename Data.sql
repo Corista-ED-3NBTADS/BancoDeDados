@@ -1,4 +1,4 @@
-
+DROP DATABASE IF EXISTS coral;
 CREATE DATABASE IF NOT EXISTS coral;
 USE coral;
 
@@ -40,11 +40,29 @@ CREATE TABLE IF NOT EXISTS `agenda_apresentacoes` (
 CREATE TABLE IF NOT EXISTS `presencas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_corista` int(11) DEFAULT NULL,
+  id_musico INT(11) DEFAULT NULL,
   `id_agenda` int(11) DEFAULT NULL,
   `presente` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_corista` (`id_corista`),
+   KEY `id_musico` (`id_musico`),
   KEY `id_agenda` (`id_agenda`),
   CONSTRAINT `presencas_ibfk_1` FOREIGN KEY (`id_corista`) REFERENCES `coristas` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `presencas_ibfk_2` FOREIGN KEY (`id_agenda`) REFERENCES `agenda_apresentacoes` (`id`) ON DELETE CASCADE
+  CONSTRAINT `presencas_ibfk_2` FOREIGN KEY (`id_musico`) REFERENCES `musicos` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `presencas_ibfk_3` FOREIGN KEY (`id_agenda`) REFERENCES `agenda_apresentacoes` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+CREATE TABLE IF NOT EXISTS participantes_evento (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_agenda INT NOT NULL,
+  id_corista INT DEFAULT NULL,
+  id_musico INT DEFAULT NULL,
+  
+
+  FOREIGN KEY (id_agenda) REFERENCES agenda_apresentacoes(id) ON DELETE CASCADE,
+  FOREIGN KEY (id_corista) REFERENCES coristas(id) ON DELETE CASCADE,
+  FOREIGN KEY (id_musico) REFERENCES musicos(id) ON DELETE CASCADE,
+  
+  CHECK (id_corista IS NOT NULL OR id_musico IS NOT NULL)
+);
